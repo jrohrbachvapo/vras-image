@@ -33,12 +33,12 @@ LABEL summary="$SUMMARY" \
 EXPOSE 8080
 EXPOSE 8443
 
-RUN yum -y module enable httpd:$HTTPD_VERSION && \
+RUN dnf -y module enable httpd:$HTTPD_VERSION && \
     INSTALL_PKGS="gettext hostname nss_wrapper bind-utils httpd mod_ssl mod_ldap mod_session mod_security mod_auth_mellon sscg" && \
-    yum install -y --setopt=tsflags=nodocs $INSTALL_PKGS && \
+    dnf install -y --setopt=tsflags=nodocs $INSTALL_PKGS && \
     rpm -V $INSTALL_PKGS && \
     httpd -v | grep -qe "Apache/$HTTPD_VERSION" && echo "Found VERSION $HTTPD_VERSION" && \
-    yum -y clean all --enablerepo='*'
+    dnf -y clean all --enablerepo='*'
 
 ENV HTTPD_CONTAINER_SCRIPTS_PATH=/usr/share/container-scripts/httpd/ \
     HTTPD_APP_ROOT=${APP_ROOT} \
@@ -54,9 +54,13 @@ ENV HTTPD_CONTAINER_SCRIPTS_PATH=/usr/share/container-scripts/httpd/ \
 
 # COPY 2.4/s2i/bin/ $STI_SCRIPTS_PATH
 # COPY 2.4/root /
+RUN ls /usr
+RUN ls /usr/libexec
 
+RUN /usr/share/container-scripts/httpd
+RUN /usr/share/container-scripts/
 # Reset permissions of filesystem to default values
-RUN /usr/libexec/httpd-prepare && rpm-file-permissions
+# RUN /usr/libexec/httpd-prepare && rpm-file-permissions
 
 USER 1001
 
