@@ -1,8 +1,8 @@
 FROM registry.access.redhat.com/ubi8/httpd-24:latest
 
 # Setup the IRIS env vars
-ENV ISC_PACKAGE_HOSTNAME = "localhost" \
-    ISC_PACKAGE_SUPERSERVER_PORT = 1972 \
+ENV ISC_PACKAGE_HOSTNAME=localhost \
+    ISC_PACKAGE_SUPERSERVER_PORT=1972 \
     ISC_PACKAGE_INSTANCENAME="VRSR0PSVR" \
     ISC_PACKAGE_PLATFORM="lnxrh8x64" \
     ISC_PACKAGE_MODE="unattended"
@@ -40,5 +40,5 @@ ENV ISC_PACKAGE_HOSTNAME = "localhost" \
 # CMD ["httpd", "-D", "FOREGROUND", "-E", "/tmp/error_log"]
 # ENTRYPOINT ["/tini", "--", "httpd", "-D", "FOREGROUND"]
 
-CMD ["/bin/bash", "-c", "tail -f /dev/null"]
-# CMD ["httpd", "-D FOREGROUND"]
+# CMD ["/bin/bash", "-c", "tail -f /dev/null"]
+CMD ["/usr/bin/run-httpd"]
