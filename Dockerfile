@@ -40,5 +40,5 @@ ENV ISC_PACKAGE_HOSTNAME = "localhost" \
 # CMD ["httpd", "-D", "FOREGROUND", "-E", "/tmp/error_log"]
 # ENTRYPOINT ["/tini", "--", "httpd", "-D", "FOREGROUND"]
 
-# CMD ["/bin/bash", "-c", "tail -f /dev/null"]
-CMD ["httpd", "-D FOREGROUND"]
+CMD ["/bin/bash", "-c", "tail -f /dev/null"]
+# CMD ["httpd", "-D FOREGROUND"]
