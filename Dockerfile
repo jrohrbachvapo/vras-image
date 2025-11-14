@@ -1,4 +1,4 @@
-FROM registry.access.redhat.com/ubi8:latest
+FROM registry.access.redhat.com/ubi8/httpd-24:latest
 
 # --build-arg USER_PASSWD=password-goes-here
 ARG USER_PASSWD
@@ -15,13 +15,13 @@ RUN fips-mode-setup --enable
 
 # Allow Apache to run on priv ports
 # RUN setcap 'cap_net_bind_service=+ep' /usr/sbin/httpd
-RUN chown -R apache:apache /var/log/httpd
-RUN chown -R apache:apache /etc/httpd/run
-RUN chmod 755 /var/log/httpd
-RUN chmod 775 /etc/httpd/run
+# RUN chown -R apache:apache /var/log/httpd
+# RUN chown -R apache:apache /etc/httpd/run
+# RUN chmod 755 /var/log/httpd
+# RUN chmod 775 /etc/httpd/run
 
-# Change default port 80 to 8080
-RUN sed -i 's/Listen 80/Listen 8080/g' /etc/httpd/conf/httpd.conf
+# # Change default port 80 to 8080
+# RUN sed -i 's/Listen 80/Listen 8080/g' /etc/httpd/conf/httpd.conf
 
 # Setup the IRIS env vars
 ENV ISC_PACKAGE_HOSTNAME = "localhost" \
@@ -48,20 +48,21 @@ ENV ISC_PACKAGE_HOSTNAME = "localhost" \
 # RUN chmod +x /tini
 
 # Create a non-root user for OpenShift compatibility
-RUN useradd -r -u 1001 -g root -G apache runner
-RUN chmod 775 /var/log/httpd && \
-    chmod 775 /run/httpd && \
-    chmod 775 /etc/httpd/logs 
+# RUN useradd -r -u 1001 -g root -G apache runner
+# RUN chmod 775 /var/log/httpd && \
+#     chmod 775 /run/httpd && \
+#     chmod 775 /etc/httpd/logs 
 
-USER 1001
+# USER 1001
 
-EXPOSE 8080/tcp
+# EXPOSE 8080/tcp
 
 # WORKDIR /var/www/html
 
 # Start Apache in the foreground
-CMD ["httpd", "-D", "FOREGROUND", "-E", "/tmp/error_log"]
+# CMD ["httpd", "-D", "FOREGROUND", "-E", "/tmp/error_log"]
 # ENTRYPOINT ["/tini", "--", "httpd", "-D", "FOREGROUND"]
+CMD ["/usr/bin/run-httpd"]
 
 LABEL maintainer="Ronaldo Nascimento <ronaldo.nascimento@va.gov>" \
     version="2.6.5" \
