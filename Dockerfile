@@ -1,69 +1,68 @@
-FROM registry.access.redhat.com/ubi8/httpd-24:latest
+FROM registry.access.redhat.com/ubi8/s2i-core:8.10-1761035629@sha256:ced1b78fb4af7f0c8f60e1e7d45e210f054ead7d9364eb59d83f9639077abda9
 
-# --build-arg USER_PASSWD=password-goes-here
-ARG USER_PASSWD
-# ARG ISC_PACKAGE_PLATFORM=lnxrh8x64
+# Apache HTTP Server image.
+#
+# Volumes:
+#  * /var/www - Datastore for httpd
+#  * /var/log/httpd24 - Storage for logs when $HTTPD_LOG_TO_VOLUME is set
+# Environment:
+#  * $HTTPD_LOG_TO_VOLUME (optional) - When set, httpd will log into /var/log/httpd24
 
-# Update package lists
-# RUN dnf -y --refresh update
+ENV HTTPD_VERSION=2.4
 
-# Install software (example with curl and git)
-# RUN dnf -y install openssl httpd hostname wget procps-ng
+ENV SUMMARY="Platform for running Apache httpd $HTTPD_VERSION or building httpd-based application" \
+    DESCRIPTION="Apache httpd $HTTPD_VERSION available as container, is a powerful, efficient, \
+and extensible web server. Apache supports a variety of features, many implemented as compiled modules \
+which extend the core functionality. \
+These can range from server-side programming language support to authentication schemes. \
+Virtual hosting allows one Apache installation to serve many different Web sites."
 
-# Enable FIPS Mode
-# RUN fips-mode-setup --enable
+LABEL summary="$SUMMARY" \
+      description="$DESCRIPTION" \
+      io.k8s.description="$DESCRIPTION" \
+      io.k8s.display-name="Apache httpd $HTTPD_VERSION" \
+      io.openshift.expose-services="8080:http,8443:https" \
+      io.openshift.tags="builder,httpd,httpd-24" \
+      name="rhel8/httpd-24" \
+      version="1" \
+      com.redhat.license_terms="https://www.redhat.com/en/about/red-hat-end-user-license-agreements#UBI" \
+      com.redhat.component="httpd-24-container" \
+      usage="s2i build https://github.com/sclorg/httpd-container.git --context-dir=examples/sample-test-app/ rhel8/httpd-24 sample-server" \
+      maintainer="SoftwareCollections.org <sclorg@redhat.com>"
 
-# Allow Apache to run on priv ports
-# RUN setcap 'cap_net_bind_service=+ep' /usr/sbin/httpd
-# RUN chown -R apache:apache /var/log/httpd
-# RUN chown -R apache:apache /etc/httpd/run
-# RUN chmod 755 /var/log/httpd
-# RUN chmod 775 /etc/httpd/run
+EXPOSE 8080
+EXPOSE 8443
 
-# # Change default port 80 to 8080
-# RUN sed -i 's/Listen 80/Listen 8080/g' /etc/httpd/conf/httpd.conf
+RUN yum -y module enable httpd:$HTTPD_VERSION && \
+    INSTALL_PKGS="gettext hostname nss_wrapper bind-utils httpd mod_ssl mod_ldap mod_session mod_security mod_auth_mellon sscg" && \
+    yum install -y --setopt=tsflags=nodocs $INSTALL_PKGS && \
+    rpm -V $INSTALL_PKGS && \
+    httpd -v | grep -qe "Apache/$HTTPD_VERSION" && echo "Found VERSION $HTTPD_VERSION" && \
+    yum -y clean all --enablerepo='*'
 
-# Setup the IRIS env vars
-ENV ISC_PACKAGE_HOSTNAME = "localhost" \
-    ISC_PACKAGE_SUPERSERVER_PORT = 1972 \
-    ISC_PACKAGE_INSTANCENAME="VRSR0PSVR" \
-    ISC_PACKAGE_PLATFORM="lnxrh8x64" \
-    ISC_PACKAGE_MODE="unattended"
+ENV HTTPD_CONTAINER_SCRIPTS_PATH=/usr/share/container-scripts/httpd/ \
+    HTTPD_APP_ROOT=${APP_ROOT} \
+    HTTPD_CONFIGURATION_PATH=${APP_ROOT}/etc/httpd.d \
+    HTTPD_MAIN_CONF_PATH=/etc/httpd/conf \
+    HTTPD_MAIN_CONF_MODULES_D_PATH=/etc/httpd/conf.modules.d \
+    HTTPD_MAIN_CONF_D_PATH=/etc/httpd/conf.d \
+    HTTPD_TLS_CERT_PATH=/etc/httpd/tls \
+    HTTPD_VAR_RUN=/var/run/httpd \
+    HTTPD_DATA_PATH=/var/www \
+    HTTPD_DATA_ORIG_PATH=/var/www \
+    HTTPD_LOG_PATH=/var/log/httpd
 
-# Download and extract the WebGateway
-# ENV IRIS_WEBGATEWAY_INSTALL_PFX=WebGateway-2024.1.4.516.1-lnxrh8x64
-# COPY ${IRIS_WEBGATEWAY_INSTALL_PFX}.tar.gz /tmp
-# RUN mkdir -p /tmp/webgw
-# RUN tar xzf /tmp/${IRIS_WEBGATEWAY_INSTALL_PFX}.tar.gz -C /tmp/webgw
+COPY 2.4/s2i/bin/ $STI_SCRIPTS_PATH
+COPY 2.4/root /
 
-# Install WebGateway
-# WORKDIR /tmp/webgw/${IRIS_WEBGATEWAY_INSTALL_PFX}/install
-# RUN /tmp/webgw/${IRIS_WEBGATEWAY_INSTALL_PFX}/install/GatewayInstall
-# RUN rm -rf /tmp/webgw
-# RUN rm /tmp/${IRIS_WEBGATEWAY_INSTALL_PFX}.tar.gz
+# Reset permissions of filesystem to default values
+RUN /usr/libexec/httpd-prepare && rpm-file-permissions
 
-# Add Tini
-# ENV TINI_VERSION=v0.19.0
-# ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
-# RUN chmod +x /tini
+USER 1001
 
-# Create a non-root user for OpenShift compatibility
-# RUN useradd -r -u 1001 -g root -G apache runner
-# RUN chmod 775 /var/log/httpd && \
-#     chmod 775 /run/httpd && \
-#     chmod 775 /etc/httpd/logs 
+# Not using VOLUME statement since it's not working in OpenShift Online:
+# https://github.com/sclorg/httpd-container/issues/30
+# VOLUME ["${HTTPD_DATA_PATH}"]
+# VOLUME ["${HTTPD_LOG_PATH}"]
 
-# USER 1001
-
-# EXPOSE 8080/tcp
-
-# WORKDIR /var/www/html
-
-# Start Apache in the foreground
-# CMD ["httpd", "-D", "FOREGROUND", "-E", "/tmp/error_log"]
-# ENTRYPOINT ["/tini", "--", "httpd", "-D", "FOREGROUND"]
-# CMD ["/usr/bin/run-httpd"]
-
-LABEL maintainer="Ronaldo Nascimento <ronaldo.nascimento@va.gov>" \
-    version="2.6.5" \
-    description="VA Baseline RHEL 8 with InterSystems WebGateway 2024.1.4"
+CMD ["/usr/bin/run-httpd"]
