@@ -1,0 +1,20 @@
+    apiVersion: build.openshift.io/v1
+    kind: BuildConfig
+    metadata:
+      name: my-docker-build
+    spec:
+      triggers:
+        - type: ConfigChange
+      source:
+        type: Git
+        git:
+          uri: 'https://github.com/jrohrbachvapo/vras-image.git'  # Replace with your Git repository URL
+        # contextDir: 'path/to/your/dockerfile'  # Optional: if Dockerfile is not at root
+      strategy:
+        type: Docker
+        dockerStrategy:
+          dockerfilePath: 'Dockerfile'  # Optional: if Dockerfile has a different name
+      output:
+        to:
+          kind: ImageStreamTag
+          name: 'vras-image:latest' # Name for your image stream and tag
