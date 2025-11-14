@@ -11,7 +11,7 @@ ARG USER_PASSWD
 # RUN dnf -y install openssl httpd hostname wget procps-ng
 
 # Enable FIPS Mode
-RUN fips-mode-setup --enable
+# RUN fips-mode-setup --enable
 
 # Allow Apache to run on priv ports
 # RUN setcap 'cap_net_bind_service=+ep' /usr/sbin/httpd
