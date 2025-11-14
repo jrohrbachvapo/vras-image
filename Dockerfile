@@ -62,7 +62,7 @@ ENV ISC_PACKAGE_HOSTNAME = "localhost" \
 # Start Apache in the foreground
 # CMD ["httpd", "-D", "FOREGROUND", "-E", "/tmp/error_log"]
 # ENTRYPOINT ["/tini", "--", "httpd", "-D", "FOREGROUND"]
-CMD ["/usr/bin/run-httpd"]
+# CMD ["/usr/bin/run-httpd"]
 
 LABEL maintainer="Ronaldo Nascimento <ronaldo.nascimento@va.gov>" \
     version="2.6.5" \
