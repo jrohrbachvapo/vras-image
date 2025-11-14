@@ -63,7 +63,7 @@ RUN env
 RUN ls /usr
 RUN ls /usr/libexec
 
-RUN usermod -u 1001 -g root -G apache runner
+RUN usermod -a -u 1001 -g root -G apache runner
 RUN chmod 775 /var/log/httpd && \
     chmod 775 /run/httpd && \
     chmod 775 /etc/httpd/logs 
