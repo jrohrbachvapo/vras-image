@@ -52,7 +52,7 @@ ENV HTTPD_CONTAINER_SCRIPTS_PATH=/usr/share/container-scripts/httpd/ \
     HTTPD_DATA_ORIG_PATH=/var/www \
     HTTPD_LOG_PATH=/var/log/httpd
 
-COPY 2.4/s2i/bin/ $STI_SCRIPTS_PATH
+# COPY 2.4/s2i/bin/ $STI_SCRIPTS_PATH
 COPY 2.4/root /
 
 # Reset permissions of filesystem to default values
