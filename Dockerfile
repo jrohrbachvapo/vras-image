@@ -1,27 +1,4 @@
-FROM registry.access.redhat.com/ubi8/httpd-24:latest
-
-# --build-arg USER_PASSWD=password-goes-here
-ARG USER_PASSWD
-# ARG ISC_PACKAGE_PLATFORM=lnxrh8x64
-
-# Update package lists
-# RUN dnf -y --refresh update
-
-# Install software (example with curl and git)
-# RUN dnf -y install openssl httpd hostname wget procps-ng
-
-# Enable FIPS Mode
-# RUN fips-mode-setup --enable
-
-# Allow Apache to run on priv ports
-# RUN setcap 'cap_net_bind_service=+ep' /usr/sbin/httpd
-# RUN chown -R apache:apache /var/log/httpd
-# RUN chown -R apache:apache /etc/httpd/run
-# RUN chmod 755 /var/log/httpd
-# RUN chmod 775 /etc/httpd/run
-
-# # Change default port 80 to 8080
-# RUN sed -i 's/Listen 80/Listen 8080/g' /etc/httpd/conf/httpd.conf
+FROM registry.access.redhat.com/ubi8/httpd-24
 
 # Setup the IRIS env vars
 ENV ISC_PACKAGE_HOSTNAME = "localhost" \
@@ -62,8 +39,4 @@ ENV ISC_PACKAGE_HOSTNAME = "localhost" \
 # Start Apache in the foreground
 # CMD ["httpd", "-D", "FOREGROUND", "-E", "/tmp/error_log"]
 # ENTRYPOINT ["/tini", "--", "httpd", "-D", "FOREGROUND"]
-# CMD ["/usr/bin/run-httpd"]
-
-LABEL maintainer="Ronaldo Nascimento <ronaldo.nascimento@va.gov>" \
-    version="2.6.5" \
-    description="VA Baseline RHEL 8 with InterSystems WebGateway 2024.1.4"
+CMD ["run-httpd"]
