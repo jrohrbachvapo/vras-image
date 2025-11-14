@@ -32,7 +32,8 @@ ENV ISC_PACKAGE_HOSTNAME=localhost \
 
 # USER 1001
 
-# EXPOSE 8080/tcp
+EXPOSE 8080/tcp
+EXPOSE 8443/tcp
 
 # WORKDIR /var/www/html
 
