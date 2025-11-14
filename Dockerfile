@@ -56,19 +56,19 @@ ENV HTTPD_CONTAINER_SCRIPTS_PATH=/usr/share/container-scripts/httpd/ \
     HTTPD_LOG_PATH=/var/log/httpd
 
 
-# COPY 2.4/s2i/bin/ $STI_SCRIPTS_PATH
-# COPY 2.4/root /
+COPY 2.4/s2i/bin/ $STI_SCRIPTS_PATH
+COPY 2.4/root /
 
 
 # Reset permissions of filesystem to default values
-# RUN /usr/libexec/httpd-prepare && rpm-file-permissions
+RUN /usr/libexec/httpd-prepare && rpm-file-permissions
 
 USER 1001
 
 # Not using VOLUME statement since it's not working in OpenShift Online:
 # https://github.com/sclorg/httpd-container/issues/30
-VOLUME ["${HTTPD_DATA_PATH}"]
-VOLUME ["${HTTPD_LOG_PATH}"]
+# VOLUME ["${HTTPD_DATA_PATH}"]
+# VOLUME ["${HTTPD_LOG_PATH}"]
 
-# CMD ["/bin/bash", "-c", "tail -f /dev/null"]
-CMD ["httpd", "-D FOREGROUND"]
+CMD ["/bin/bash", "-c", "tail -f /dev/null"]
+# CMD ["httpd", "-D FOREGROUND"]
