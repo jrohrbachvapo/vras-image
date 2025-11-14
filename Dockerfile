@@ -63,10 +63,6 @@ RUN env
 RUN ls /usr
 RUN ls /usr/libexec
 
-RUN usermod -a -u 1001 -g root -G apache runner
-RUN chmod 775 /var/log/httpd && \
-    chmod 775 /run/httpd && \
-    chmod 775 /etc/httpd/logs 
 
 # Reset permissions of filesystem to default values
 # RUN /usr/libexec/httpd-prepare && rpm-file-permissions
@@ -78,4 +74,5 @@ USER 1001
 # VOLUME ["${HTTPD_DATA_PATH}"]
 # VOLUME ["${HTTPD_LOG_PATH}"]
 
-CMD ["/bin/bash", "-c", "tail -f /dev/null"]
+# CMD ["/bin/bash", "-c", "tail -f /dev/null"]
+CMD ["httpd", "-D FOREGROUND"]
