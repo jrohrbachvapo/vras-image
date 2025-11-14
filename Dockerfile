@@ -1,4 +1,4 @@
-FROM registry.access.redhat.com/ubi8/httpd-24
+FROM registry.access.redhat.com/ubi8/httpd-24:latest
 
 # Setup the IRIS env vars
 ENV ISC_PACKAGE_HOSTNAME = "localhost" \
