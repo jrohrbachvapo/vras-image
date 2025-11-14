@@ -5,10 +5,10 @@ ARG USER_PASSWD
 # ARG ISC_PACKAGE_PLATFORM=lnxrh8x64
 
 # Update package lists
-RUN dnf -y --refresh update
+# RUN dnf -y --refresh update
 
 # Install software (example with curl and git)
-RUN dnf -y install openssl httpd hostname wget procps-ng
+# RUN dnf -y install openssl httpd hostname wget procps-ng
 
 # Enable FIPS Mode
 RUN fips-mode-setup --enable
