@@ -40,6 +40,9 @@ RUN dnf -y module enable httpd:$HTTPD_VERSION && \
     httpd -v | grep -qe "Apache/$HTTPD_VERSION" && echo "Found VERSION $HTTPD_VERSION" && \
     dnf -y clean all --enablerepo='*'
 
+# RUN ls /usr/share/container-scripts/
+# RUN ls /usr/share/container-scripts/httpd
+
 ENV HTTPD_CONTAINER_SCRIPTS_PATH=/usr/share/container-scripts/httpd/ \
     HTTPD_APP_ROOT=${APP_ROOT} \
     HTTPD_CONFIGURATION_PATH=${APP_ROOT}/etc/httpd.d \
@@ -56,8 +59,6 @@ ENV HTTPD_CONTAINER_SCRIPTS_PATH=/usr/share/container-scripts/httpd/ \
 # COPY 2.4/root /
 RUN ls /usr
 RUN ls /usr/libexec
-RUN ls /usr/share/container-scripts/
-RUN ls /usr/share/container-scripts/httpd
 
 # Reset permissions of filesystem to default values
 # RUN /usr/libexec/httpd-prepare && rpm-file-permissions
