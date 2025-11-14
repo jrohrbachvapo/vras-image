@@ -73,4 +73,4 @@ USER 1001
 # VOLUME ["${HTTPD_DATA_PATH}"]
 # VOLUME ["${HTTPD_LOG_PATH}"]
 
-CMD ["/bin/bash"]
+CMD ["/bin/bash", "-c", "tail -f /dev/null"]
