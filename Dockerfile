@@ -51,9 +51,7 @@ ENV ISC_PACKAGE_HOSTNAME = "localhost" \
 RUN useradd -r -u 1001 -g root -G apache runner
 RUN chmod 775 /var/log/httpd && \
     chmod 775 /run/httpd && \
-    chmod 775 /etc/httpd/logs && \
-    chgrp apache /etc/httpd/logs && \
-    chmod 770 /var/log/httpd/error_log
+    chmod 775 /etc/httpd/logs 
 
 USER 1001
 
