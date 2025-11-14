@@ -37,9 +37,8 @@ RUN dnf -y module enable httpd:$HTTPD_VERSION && \
     INSTALL_PKGS="gettext hostname nss_wrapper bind-utils httpd mod_ssl mod_ldap mod_session mod_security mod_auth_mellon sscg" && \
     dnf install -y --setopt=tsflags=nodocs $INSTALL_PKGS && \
     rpm -V $INSTALL_PKGS && \
-    httpd -v | grep -qe "Apache/$HTTPD_VERSION" && echo "Found VERSION $HTTPD_VERSION" 
-    # && \
-    # dnf -y clean all --enablerepo='*'
+    httpd -v | grep -qe "Apache/$HTTPD_VERSION" && echo "Found VERSION $HTTPD_VERSION" && \
+    dnf -y clean all --enablerepo='*'
 
 # RUN ls /usr/share/container-scripts/
 # RUN ls /usr/share/container-scripts/httpd
@@ -56,12 +55,9 @@ ENV HTTPD_CONTAINER_SCRIPTS_PATH=/usr/share/container-scripts/httpd/ \
     HTTPD_DATA_ORIG_PATH=/var/www \
     HTTPD_LOG_PATH=/var/log/httpd
 
-RUN env
 
 # COPY 2.4/s2i/bin/ $STI_SCRIPTS_PATH
 # COPY 2.4/root /
-RUN ls /usr
-RUN ls /usr/libexec
 
 
 # Reset permissions of filesystem to default values
@@ -71,8 +67,8 @@ USER 1001
 
 # Not using VOLUME statement since it's not working in OpenShift Online:
 # https://github.com/sclorg/httpd-container/issues/30
-# VOLUME ["${HTTPD_DATA_PATH}"]
-# VOLUME ["${HTTPD_LOG_PATH}"]
+VOLUME ["${HTTPD_DATA_PATH}"]
+VOLUME ["${HTTPD_LOG_PATH}"]
 
 # CMD ["/bin/bash", "-c", "tail -f /dev/null"]
 CMD ["httpd", "-D FOREGROUND"]
