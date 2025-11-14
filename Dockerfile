@@ -31,16 +31,16 @@ ENV ISC_PACKAGE_HOSTNAME = "localhost" \
     ISC_PACKAGE_MODE="unattended"
 
 # Download and extract the WebGateway
-ENV IRIS_WEBGATEWAY_INSTALL_PFX=WebGateway-2024.1.4.516.1-lnxrh8x64
-COPY ${IRIS_WEBGATEWAY_INSTALL_PFX}.tar.gz /tmp
-RUN mkdir -p /tmp/webgw
-RUN tar xzf /tmp/${IRIS_WEBGATEWAY_INSTALL_PFX}.tar.gz -C /tmp/webgw
+# ENV IRIS_WEBGATEWAY_INSTALL_PFX=WebGateway-2024.1.4.516.1-lnxrh8x64
+# COPY ${IRIS_WEBGATEWAY_INSTALL_PFX}.tar.gz /tmp
+# RUN mkdir -p /tmp/webgw
+# RUN tar xzf /tmp/${IRIS_WEBGATEWAY_INSTALL_PFX}.tar.gz -C /tmp/webgw
 
 # Install WebGateway
-WORKDIR /tmp/webgw/${IRIS_WEBGATEWAY_INSTALL_PFX}/install
-RUN /tmp/webgw/${IRIS_WEBGATEWAY_INSTALL_PFX}/install/GatewayInstall
-RUN rm -rf /tmp/webgw
-RUN rm /tmp/${IRIS_WEBGATEWAY_INSTALL_PFX}.tar.gz
+# WORKDIR /tmp/webgw/${IRIS_WEBGATEWAY_INSTALL_PFX}/install
+# RUN /tmp/webgw/${IRIS_WEBGATEWAY_INSTALL_PFX}/install/GatewayInstall
+# RUN rm -rf /tmp/webgw
+# RUN rm /tmp/${IRIS_WEBGATEWAY_INSTALL_PFX}.tar.gz
 
 # Add Tini
 # ENV TINI_VERSION=v0.19.0
