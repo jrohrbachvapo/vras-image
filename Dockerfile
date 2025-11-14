@@ -56,9 +56,9 @@ ENV HTTPD_CONTAINER_SCRIPTS_PATH=/usr/share/container-scripts/httpd/ \
 # COPY 2.4/root /
 RUN ls /usr
 RUN ls /usr/libexec
-
-RUN /usr/share/container-scripts/httpd
 RUN /usr/share/container-scripts/
+# RUN /usr/share/container-scripts/httpd
+
 # Reset permissions of filesystem to default values
 # RUN /usr/libexec/httpd-prepare && rpm-file-permissions
 
