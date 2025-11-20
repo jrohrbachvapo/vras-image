@@ -48,10 +48,10 @@ ENV ISC_PACKAGE_HOSTNAME = "localhost" \
 # RUN chmod +x /tini
 
 # Create a non-root user for OpenShift compatibility
-# RUN useradd -r -u 1001 -g root -G apache runner
-# RUN chmod 775 /var/log/httpd && \
-#     chmod 775 /run/httpd && \
-#     chmod 775 /etc/httpd/logs 
+RUN useradd -r -u 1000750001 -g root -G apache runner
+RUN chmod 775 /var/log/httpd && \
+    chmod 775 /run/httpd && \
+    chmod 775 /etc/httpd/logs 
 
 USER 1000750001
 
