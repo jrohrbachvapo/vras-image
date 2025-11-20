@@ -14,11 +14,11 @@ RUN dnf -y install openssl httpd hostname wget procps-ng
 RUN fips-mode-setup --enable
 
 # Allow Apache to run on priv ports
-RUN setcap 'cap_net_bind_service=+ep' /usr/sbin/httpd
-RUN chown -R apache:apache /var/log/httpd
-RUN chown -R apache:apache /etc/httpd/run
-RUN chmod 755 /var/log/httpd
-RUN chmod 775 /etc/httpd/run
+# RUN setcap 'cap_net_bind_service=+ep' /usr/sbin/httpd
+# RUN chown -R apache:apache /var/log/httpd
+# RUN chown -R apache:apache /etc/httpd/run
+# RUN chmod 755 /var/log/httpd
+# RUN chmod 775 /etc/httpd/run
 
 # Change default port 80 to 8080
 RUN sed -i 's/Listen 80/Listen 8080/g' /etc/httpd/conf/httpd.conf
@@ -48,14 +48,19 @@ ENV ISC_PACKAGE_HOSTNAME = "localhost" \
 # RUN chmod +x /tini
 
 # Create a non-root user for OpenShift compatibility
-RUN useradd -r -u 1001 -g root -G apache runner
-RUN chmod 775 /var/log/httpd && \
-    chmod 775 /run/httpd && \
-    chmod 775 /etc/httpd/logs 
+# RUN useradd -r -u 1001 -g root -G apache runner
+# RUN chmod 775 /var/log/httpd && \
+#     chmod 775 /run/httpd && \
+#     chmod 775 /etc/httpd/logs 
+RUN chown -R 0:0 /var/www/html && chmod -R g+rwX /var/www/html
+RUN chown -R 0:0 /var/log/httpd && chmod -R g+rwX /var/log/httpd
+RUN chown -R 0:0 /etc/httpd/run && chmod -R g+rwX /etc/httpd/run
+RUN chown -R 0:0 /etc/httpd/logs && chmod -R g+rwX /etc/httpd/logs
 
 USER 1001
 
 EXPOSE 8080/tcp
+EXPOSE 8443/tcp
 
 # WORKDIR /var/www/html
 
