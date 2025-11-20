@@ -14,11 +14,11 @@ RUN dnf -y install openssl httpd hostname wget procps-ng
 RUN fips-mode-setup --enable
 
 # Allow Apache to run on priv ports
-# RUN setcap 'cap_net_bind_service=+ep' /usr/sbin/httpd
-# RUN chown -R apache:apache /var/log/httpd
-# RUN chown -R apache:apache /etc/httpd/run
-# RUN chmod 755 /var/log/httpd
-# RUN chmod 775 /etc/httpd/run
+RUN setcap 'cap_net_bind_service=+ep' /usr/sbin/httpd
+RUN chown -R apache:apache /var/log/httpd
+RUN chown -R apache:apache /etc/httpd/run
+RUN chmod 755 /var/log/httpd
+RUN chmod 775 /etc/httpd/run
 
 # Change default port 80 to 8080
 RUN sed -i 's/Listen 80/Listen 8080/g' /etc/httpd/conf/httpd.conf
