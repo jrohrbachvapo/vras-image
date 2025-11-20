@@ -11,7 +11,7 @@ RUN dnf -y --refresh update
 RUN dnf -y install openssl httpd hostname wget procps-ng
 
 # Enable FIPS Mode
-RUN fips-mode-setup --enable
+# RUN fips-mode-setup --enable
 
 # Allow Apache to run on priv ports
 # RUN setcap 'cap_net_bind_service=+ep' /usr/sbin/httpd
@@ -21,7 +21,7 @@ RUN fips-mode-setup --enable
 # RUN chmod 775 /etc/httpd/run
 
 # Change default port 80 to 8080
-RUN sed -i 's/Listen 80/Listen 8080/g' /etc/httpd/conf/httpd.conf
+# RUN sed -i 's/Listen 80/Listen 8080/g' /etc/httpd/conf/httpd.conf
 
 # Setup the IRIS env vars
 ENV ISC_PACKAGE_HOSTNAME = "localhost" \
