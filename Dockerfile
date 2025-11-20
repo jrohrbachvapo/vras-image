@@ -29,10 +29,11 @@ ENV ISC_PACKAGE_HOSTNAME=localhost \
 # RUN chmod 775 /var/log/httpd && \
 #     chmod 775 /run/httpd && \
 #     chmod 775 /etc/httpd/logs 
-
-# USER 1001
+USER root
 
 RUN fips-mode-setup --enable
+
+USER 1001
 
 EXPOSE 8080/tcp
 EXPOSE 8443/tcp
