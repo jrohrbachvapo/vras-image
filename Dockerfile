@@ -32,6 +32,8 @@ ENV ISC_PACKAGE_HOSTNAME=localhost \
 
 # USER 1001
 
+RUN fips-mode-setup --enable
+
 EXPOSE 8080/tcp
 EXPOSE 8443/tcp
 
