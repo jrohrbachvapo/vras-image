@@ -53,7 +53,7 @@ ENV ISC_PACKAGE_HOSTNAME = "localhost" \
 #     chmod 775 /run/httpd && \
 #     chmod 775 /etc/httpd/logs 
 
-# USER 1001
+USER 1000750000
 
 EXPOSE 8080/tcp
 
