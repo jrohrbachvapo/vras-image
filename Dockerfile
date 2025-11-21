@@ -54,5 +54,4 @@ EXPOSE 8443/tcp
 # ENTRYPOINT ["/tini", "--", "httpd", "-D", "FOREGROUND"]
 
 # CMD ["/bin/bash", "-c", "tail -f /dev/null"]
-# CMD ["/usr/bin/run-httpd"]
-ENTRYPOINT [ "/tini", "--", "httpd", "-D", "FOREGROUND" ]
+CMD ["/usr/bin/run-httpd"]
