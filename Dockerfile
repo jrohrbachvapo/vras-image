@@ -1,5 +1,16 @@
 FROM registry.access.redhat.com/ubi8/httpd-24:latest
 
+USER root
+
+RUN fips-mode-setup --enable
+
+# Add Tini
+ENV TINI_VERSION=v0.19.0
+ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
+RUN chmod +x /tini
+
+USER 1001
+
 # Setup the IRIS env vars
 ENV ISC_PACKAGE_HOSTNAME=localhost \
     ISC_PACKAGE_SUPERSERVER_PORT=1972 \
@@ -29,11 +40,9 @@ ENV ISC_PACKAGE_HOSTNAME=localhost \
 # RUN chmod 775 /var/log/httpd && \
 #     chmod 775 /run/httpd && \
 #     chmod 775 /etc/httpd/logs 
-USER root
 
-RUN fips-mode-setup --enable
 
-USER 1001
+
 
 EXPOSE 8080/tcp
 EXPOSE 8443/tcp
